@@ -1,6 +1,7 @@
 package com.java.shaman;
 
 
+import java.util.ArrayList;
 import java.util.Timer;
 
 import alarm.AlarmManagerService;
@@ -20,14 +21,15 @@ public class RecoveryManager {
 	public static void main(String... args) {
 
 
-
-	//	new AlarmManagerService().setPowerOffAlarmForAllVms(ServiceInstanceSingleton.getServiceInstance());
+		
+		
+		new AlarmManagerService().setPowerOffAlarmForAllVms(ServiceInstanceSingleton.getServiceInstance());
 
 
 		//Timer task for snapshots
-//		Timer snapshotTimee = new Timer(); 
-//		SnapshotsTimerTask snapshotTask = new SnapshotsTimerTask(); 
-//		snapshotTimee.schedule(snapshotTask, 0, 10*60*1000); 
+		Timer snapshotTimee = new Timer(); 
+		SnapshotsTimerTask snapshotTask = new SnapshotsTimerTask(); 
+		snapshotTimee.schedule(snapshotTask, 0, 30*60*1000); 
 
 //		//	Timer task for VM recovery
 		Timer recoveryTimer = new Timer(); 

@@ -67,6 +67,7 @@ public class SnapshotService {
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					
 				}
 		        
 		    
@@ -79,6 +80,7 @@ public class SnapshotService {
 		    
 		    public static void revertToMostRecentSnapshot(VirtualMachine vm) {
 				System.out.println("Reverting to " +vm.getSnapshot()+"...");
+				
 				Task task;
 				try {
 					task = vm.revertToCurrentSnapshot_Task(null);

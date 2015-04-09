@@ -281,13 +281,11 @@ public class VMService {
 				e.printStackTrace();
 			}
 			
-			System.out.println("vm:" + vm.getName() + " powered off.");
 		}
 		
-		 String ip = vm.getGuest().getIpAddress();
+		
 		do {
-			
-		} while (HeartBeatsService.isAlive(ip));
+		} while (!HeartBeatsService.isAlive(vm.getGuest().getIpAddress()));
 
 		return true;
 		
