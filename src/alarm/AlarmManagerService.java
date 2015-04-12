@@ -1,5 +1,5 @@
 package alarm;
-import java.net.URL;
+
 import java.rmi.RemoteException;
 
 import recover.VMService;
@@ -7,10 +7,8 @@ import recover.VMService;
 import com.vmware.vim25.Action;
 import com.vmware.vim25.AlarmSpec;
 import com.vmware.vim25.AlarmTriggeringAction;
-import com.vmware.vim25.MethodAction;
-import com.vmware.vim25.MethodActionArgument;
+import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.RuntimeFault;
-import com.vmware.vim25.SendEmailAction;
 import com.vmware.vim25.StateAlarmExpression;
 import com.vmware.vim25.StateAlarmOperator;
 import com.vmware.vim25.mo.Alarm;
@@ -18,7 +16,6 @@ import com.vmware.vim25.mo.AlarmManager;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
-import com.vmware.vim25.mo.ManagedObject;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.VirtualMachine;
 
@@ -58,6 +55,55 @@ public class AlarmManagerService
 			
 			
 		}
+	}
+	
+	public void createAlarmForAllHost(ServiceInstance si) 
+	{
+		
+		AlarmManager am = si.getAlarmManager();
+		StateAlarmExpression alarm_exp = createStateAlarmExpression();
+		Folder root_folder = si.getRootFolder();
+		ManagedEntity[] host_pool;
+		try {
+			host_pool = new InventoryNavigator(root_folder)
+					.searchManagedEntities("VirtualMachine");
+			for (int i = 0; i < host_pool.length; i++) {
+				VirtualMachine vhost = (VirtualMachine) host_pool[i];
+				if (isMyVHost(vhost)) {
+					Alarm[] alarms = am.getAlarm(vhost);
+					if (alarms != null) {
+						for (int k = 0; k < alarms.length; k++) {
+							Alarm a = alarms[k];
+							System.out.println("Removed alarm "
+									+ a.getAlarmInfo().getName() + " on "
+									+ vhost.getName());
+							a.removeAlarm();
+						}
+					}
+					String alarm_name = vhost.getName() + "_poweroffalarm";
+					AlarmSpec spec = createSpec(alarm_name, alarm_exp);
+					am.createAlarm(vhost, spec);
+					System.out.println("Alarm " + alarm_name + " created for "
+							+ vhost.getName());
+				}
+			}
+		} catch (InvalidProperty e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RuntimeFault e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public boolean isMyVHost(VirtualMachine vm) {
+		if (vm.getName().contains("T09-vHost")) {
+			return true;
+		}
+		return false;
 	}
 
 

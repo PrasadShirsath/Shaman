@@ -1,6 +1,7 @@
 package recover;
 import java.io.IOException;
 
+import com.java.shaman.Config;
 import com.vmware.vim25.mo.VirtualMachine;
 
 
@@ -8,6 +9,7 @@ public class HeartBeatsService
 {
 	public static boolean isAlive(String ip) 
 	{
+		
 		Process p = null;
 		int failureCount=0;
 		while(failureCount<3)
@@ -29,7 +31,7 @@ public class HeartBeatsService
 				failureCount++;
 			}
 			else    //IP is alive
-			{
+			{				
 				return true;
 			}
 		}

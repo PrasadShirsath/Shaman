@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimerTask;
 
+import com.java.shaman.Config;
 import com.java.shaman.ServiceInstanceSingleton;
 import com.vmware.vim25.ManagedEntityStatus;
 import com.vmware.vim25.mo.HostSystem;
@@ -14,7 +15,8 @@ public class RecoveryTimerTask extends TimerTask
 
 	@Override
 	public void run() {
-		
+		System.out.println("===========================VM Logs================================");
+		clearConsole();
 		ArrayList<VirtualMachine> vms= VMService.getAllVMs(ServiceInstanceSingleton.getServiceInstance());
 	 	for(VirtualMachine vm:vms)
 	 	{
@@ -28,13 +30,13 @@ public class RecoveryTimerTask extends TimerTask
 	 			{
 	 					System.out.println(vm.getName()+" is not alive.");	
 	 					RecoveryThread recover = new RecoveryThread(vm);
-	 					if(recover.isVMPenddingforRecovery(vm))
+	 					if(Config.isVMPenddingforRecovery(vm))
 	 					{
 	 						System.out.println("VM "+vm.getName()+" is already being recovered...");
 	 					}
 	 					else{
 		 					System.out.println(vm.getName() + " need to be recovered.."+vm.getOverallStatus());
-	 						recover.start();
+	 						recover.run();
 	 					}
 		 			
 					}
@@ -44,7 +46,30 @@ public class RecoveryTimerTask extends TimerTask
 	 			System.out.println(vm.getName()+" is alive.");
 	 		}
 	 	} 	
+		System.out.println("=================================================================");
+
 		
+	}
+	
+	public final static void clearConsole()
+	{
+	    try
+	    {
+	        final String os = System.getProperty("os.name");
+
+	        if (os.contains("Windows"))
+	        {
+	            Runtime.getRuntime().exec("cls");
+	        }
+	        else
+	        {
+	            Runtime.getRuntime().exec("clear");
+	        }
+	    }
+	    catch (final Exception e)
+	    {
+	        //  Handle any exceptions.
+	    }
 	}
 
 }

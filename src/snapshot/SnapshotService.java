@@ -78,7 +78,7 @@ public class SnapshotService {
 		        return new StringBuilder().append("snap").append(virtualMachine.getName()).append(timestamp).toString().trim();
 		    }
 		    
-		    public static void revertToMostRecentSnapshot(VirtualMachine vm) {
+		    public static boolean revertToMostRecentSnapshot(VirtualMachine vm) {
 				System.out.println("Reverting to " +vm.getSnapshot()+"...");
 				
 				Task task;
@@ -87,6 +87,7 @@ public class SnapshotService {
 					
 					if (task.waitForTask() == Task.SUCCESS) {
 						System.out.println("Virtual machine "+vm.getName()+" successfully reverted to current snapshot");
+						return true;
 					}
 				} catch (VmConfigFault e) {
 					// TODO Auto-generated catch block
@@ -116,6 +117,7 @@ public class SnapshotService {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				return false;
 				
 			}
 

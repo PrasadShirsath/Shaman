@@ -2,8 +2,10 @@ package com.java.shaman;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import com.vmware.vim25.mo.ServiceInstance;
+import com.vmware.vim25.mo.VirtualMachine;
 
 
 public class ServiceInstanceSingleton 
@@ -50,6 +52,8 @@ public class ServiceInstanceSingleton
 		}
 		return null;
 	}
+	
+
 	
 	
 }

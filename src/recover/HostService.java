@@ -2,6 +2,7 @@ package recover;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import com.java.shaman.ServiceInstanceSingleton;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.RuntimeFault;
 import com.vmware.vim25.mo.Folder;
@@ -41,4 +42,38 @@ public class HostService {
 		    }
 		    return hosts;
 	 }
+	
+	public static VirtualMachine getResponsibleHost(String hostIp)
+	{
+		VirtualMachine vHost=null;
+		ArrayList<VirtualMachine> Vhost= VMService.getAllVMs(ServiceInstanceSingleton.getServiceClassInstance());
+	 	
+		for(final VirtualMachine v:Vhost)
+	 	{
+			if(v.getName().contains(hostIp.substring(hostIp.length() - 7)))
+			{
+				vHost= v;
+				break;
+			}
+	 	}
+		return vHost;
+		
+	}
+	
+	public static String getAnotherHost(String hostIp)
+	{
+		ArrayList<HostSystem> hosts=getAllVHosts(ServiceInstanceSingleton.getServiceInstance());
+		
+		for(HostSystem host:hosts)
+		{
+			if(!host.getName().equals(hostIp))
+			{
+				return host.getName();
+			}
+		}
+	
+		return null;
+		
+	}
+
 }
